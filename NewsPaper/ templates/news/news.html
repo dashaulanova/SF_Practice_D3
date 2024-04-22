@@ -1,0 +1,27 @@
+<!--  наследуемся от шаблона base.html -->
+{% extends 'layout/default.html' %}
+{% load custom_filters %}
+<!-- Название у нас будет proudcts -->
+{% block title %}
+    News
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+<h1>Все новости</h1>
+Количество новостей: {{news|length}}
+<br>
+{%if news%}
+    {%for new in sorted_list%}
+<h2>{{new.article_post|censor}}</h2>
+        <br>
+        {{new.time_add| date:'d-m-Y'}}
+        <br>
+        {{new.text_post| truncatewords:50|censor}}
+        <br>
+        <br>
+    {%endfor%}
+{%else%}
+    <h2>Нет новостей</h2>
+{%endif%}
+{% endblock content %}

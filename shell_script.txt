@@ -1,0 +1,126 @@
+(venv) PS C:\Users\Светлана\PycharmProjects\ProjectD2_db\NewsPaper> python manage.py shell
+Python 3.11.4 (tags/v3.11.4:d2340ef, Jun  7 2023, 05:45:37) [MSC v.1934 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from news.models import *                
+>>> user1 = User.objects.create(username="foxy", first_name="Nastya")
+>>> Author.objects.create(user=user1) 
+<Author: Author object (1)>                            
+>>> user2 = User.objects.create(username="wolf", first_name="Petya")
+>>> Author.objects.create(user=user2)
+<Author: Author object (2)>
+>>> Category.objects.create(category_name="politics")
+<Category: Category object (1)>
+>>> Category.objects.create(category_name="ecology")   
+<Category: Category object (2)>
+>>> Category.objects.create(category_name="culture")   
+<Category: Category object (3)>
+>>> Category.objects.create(category_name="education")  
+<Category: Category object (4)>
+>>> Post.objects.create(author=Author.objects.get(pk=1), type_post="NE", article_post="random new", text_post="random text")
+<Post: Post object (1)>
+>>> Post.objects.create(author=Author.objects.get(pk=1), type_post="NE", article_post="random new", text_post="random text")
+<Post: Post object (2)>
+>>> Post.objects.create(author=Author.objects.get(pk=1), type_post="NE", article_post="random new2", text_post="random text2")
+<Post: Post object (3)>
+>>> Post.objects.create(author=Author.objects.get(pk=1), type_post="AR", article_post="random article", text_post="random text_article")
+<Post: Post object (4)>
+>>> Post.objects.create(author=Author.objects.get(pk=2), type_post="NE", article_post="random new3", text_post="random text3")
+<Post: Post object (5)>
+>>> Post.objects.create(author=Author.objects.get(pk=2), type_post="AR", article_post="random article2", text_post="random text_article2")  
+<Post: Post object (6)>
+>>> post1=Post.objects.get(pk=1)
+>>> post2=Post.objects.get(pk=2)
+>>> post3=Post.objects.get(pk=3)
+>>> post4=Post.objects.get(pk=4)
+>>> post5=Post.objects.get(pk=5)
+>>> post6=Post.objects.get(pk=6)
+>>> cat1=Category.objects.get(category_name="politics")
+>>> cat2=Category.objects.get(category_name="ecology") 
+>>> cat3=Category.objects.get(category_name="culture") 
+>>> cat4=Category.objects.get(category_name="education")
+>>> post1.category.add(cat1, cat2)    
+>>> post2.category.add(cat3)                                       
+>>> post3.category.add(cat4)      
+>>> post4.category.add(cat1, cat4) 
+>>> post5.category.add(cat2)      
+>>> post6.category.add(cat3)      
+>>> Comment.objects.create(post=post1, user=User.objects.get(pk=1), text_comment="best!")   
+<Comment: Comment object (1)>
+>>> Comment.objects.create(post=post2, user=User.objects.get(pk=1), text_comment="ran_com") 
+<Comment: Comment object (2)>
+>>> Comment.objects.create(post=post3, user=User.objects.get(pk=2), text_comment="ran_com2") 
+<Comment: Comment object (3)>
+>>> Comment.objects.create(post=post4, user=User.objects.get(pk=2), text_comment="cool!!") 
+<Comment: Comment object (4)>
+>>> Comment.objects.create(post=post5, user=User.objects.get(pk=1), text_comment="haha lol") 
+<Comment: Comment object (5)>
+>>> Comment.objects.create(post=post6, user=User.objects.get(pk=1), text_comment="kek") 
+<Comment: Comment object (6)>
+>>> post1.like()
+>>> post1.like()
+>>> post1.like()
+>>> post1.like()
+>>> post1.like()
+>>> post2.like()
+>>> post2.like()
+>>> post2.like()
+>>> post2.like()
+>>> post3.dislike()
+>>> post3.dislike()
+>>> post3.dislike()
+>>> post3.dislike()
+>>> post4.dislike()
+>>> post4.dislike()  
+>>> post4.dislike()
+>>> post4.dislike()
+>>> post4.dislike()
+>>> post4.dislike()
+>>> post4.dislike()
+>>> post4.dislike()
+>>> post5.like()
+>>> post6.like()
+>>> post6.like()
+>>> post6.like()
+>>> post6.like()
+>>> post6.like()
+>>> com1=Comment.objects.get(pk=1)
+>>> com2=Comment.objects.get(pk=2)
+>>> com3=Comment.objects.get(pk=3)
+>>> com4=Comment.objects.get(pk=4) 
+>>> com1.like()
+>>> com1.like() 
+>>> com1.like()
+>>> com1.like()
+>>> com1.like()
+>>> com1.like()
+>>> com1.like()
+>>> com2.like() 
+>>> com2.like() 
+>>> com2.like()
+>>> com2.dislike()
+>>> com3.dislike()
+>>> com3.dislike()
+>>> com3.dislike()
+>>> com3.dislike()
+>>> com3.dislike()
+>>> com3.dislike()
+>>> com3.rating_comment
+-6
+>>> author2=Author.objects.get(pk=2)
+>>> author1.update_rating()
+>>> author2.update_rating()
+>>> author1.rating_author
+3
+>>> best = Author.objects.all().order_by("-rating_author").values('user', 'rating_author')[0]
+>>> print(User.objects.get(pk=best['user']).username,best['rating_author'])
+wolf 12
+>>> best_post = Post.objects.all().order_by("-rating_post")[0]                               
+>>> print(best_post.time_add, best_post.author.user.username, best_post.rating_post, best_post.article_post, best_post.preview(), sep="/")
+2023-08-28 19:06:49.686688+00:00/foxy/5/random new/random text... 
+>>> all_comment_best_post = Comment.objects.all().filter(post=best_post)  
+>>> for i in all_comment_best_post:
+...     print(i.time_add, i.user.username, i.rating_comment, i.text_comment, sep='/')
+... 
+2023-08-28 19:37:34.687470+00:00/foxy/7/best!
+>>> 
